@@ -3,17 +3,20 @@ const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
 
 //Création des balises 
-const figure = works[0]; 
+for (let i = 0; i < works.length; i++) {
+    const figure = works[i];
 
-const sectionGallery = document.querySelector(".gallery")
-const worksElement = document.createElement("figure")
+    const sectionGallery = document.querySelector(".gallery")
+    const worksElement = document.createElement("figure")
 
-const imageElement = document.createElement("img");
-imageElement.src = figure.imageUrl;
+    const imageElement = document.createElement("img");
+    imageElement.src = figure.imageUrl;
+    imageElement.alt = figure.title;
+    
+    const descriptionElement = document.createElement("figcaption");
+    descriptionElement.innerText = figure.title;
 
-const descriptionElement = document.createElement("figcaption");
-descriptionElement.innerText = figure.title;
-
-sectionGallery.appendChild(worksElement);
-worksElement.appendChild(imageElement);
-worksElement.appendChild(descriptionElement);
+    sectionGallery.appendChild(worksElement);
+    worksElement.appendChild(imageElement);
+    worksElement.appendChild(descriptionElement);
+}
