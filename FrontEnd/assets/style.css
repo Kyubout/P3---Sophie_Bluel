@@ -1,6 +1,6 @@
 /* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
+    v2.0 | 20110126
+    License: none (public domain)
 */
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, button, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
@@ -10,6 +10,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, button
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  text-decoration: none;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -55,11 +56,20 @@ table {
 }
 
 /** end reset css**/
+
+:root {
+  --main-bg-color: #fffef8;
+  --title-color: #1D6154;
+  --logo-color: #B1663C;
+}
+
+
 body {
   max-width: 1140px;
   margin: auto;
   font-family: 'Work Sans';
   font-size: 14px;
+  background-color: var(--main-bg-color);
 }
 
 header {
@@ -78,21 +88,26 @@ h1 {
   font-family: 'Syne';
   font-size: 22px;
   font-weight: 800;
-  color: #B1663C
+  color: var(--logo-color);
+  gap: 5px;
 }
 
 h1>span {
   font-family: 'Work Sans';
   font-size: 10px;
   letter-spacing: 0.1em;
-  ;
+  text-transform: uppercase;
 }
 
 h2 {
   font-family: 'Syne';
   font-weight: 700;
   font-size: 30px;
-  color: #1D6154
+  color: var(--title-color)
+}
+
+nav {
+  display: flex;
 }
 
 nav ul {
@@ -105,10 +120,15 @@ nav ul {
 nav li {
   padding: 0 10px;
   font-size: 1.2em;
+  color: black;
+}
+
+nav img {
+  height: 1.2em;
 }
 
 li:hover {
-  color: #B1663C;
+  color: var(--logo-color);
 }
 
 #introduction {
@@ -147,20 +167,21 @@ li:hover {
   font-family:'Syne';
   font-size: 16px;
   font-weight: bold;
-  color: #1D6154;
+  color: var(--title-color);
   background-color: transparent;
-  border: solid 1px #1D6154;
+  border: solid 1px var(--title-color);
   border-radius: 60px;
   padding: 10px 20px;
 }
 
 .filtres button:hover {
   color: white;
-  background-color: #1D6154;
+  background-color: var(--title-color);
 }
 
 .filtres {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
@@ -220,15 +241,52 @@ input[type="submit"] {
   font-family: 'Syne';
   font-weight: 700;
   color: white;
-  background-color: #1D6154;
+  background-color: var(--title-color);
   margin: 2em auto;
   width: 180px;
   text-align: center;
   border-radius: 60px;
 }
 
-footer nav ul {
+footer {
   display: flex;
   justify-content: flex-end;
+}
+
+footer nav ul {
   margin: 2em
+}
+
+/****** Page LogIn******/
+
+#login {
+  width: 50%;
+  margin: auto;
+}
+
+#login>* {
+  text-align: center;
+
+}
+
+#login h2 {
+  margin-bottom: 20px;
+}
+
+#login form {
+  text-align: left;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+#login label {
+  margin: 2em 0 1em 0;
+}
+
+#login input {
+  height: 50px;
+  font-size: 1.2em;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
