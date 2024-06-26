@@ -6,11 +6,12 @@ const reponseC = await fetch("http://localhost:5678/api/categories");
 const categories = await reponseC.json();
 
 //Eléments figures/figcaption des travaux
-function genererWorks(works) {
-    works.forEach(figure => {
-        const sectionGallery = document.querySelector(".gallery");
-        const worksElement = document.createElement("figure");
 
+
+function genererWorks(works) {
+    const sectionGallery = document.querySelector(".gallery");
+    works.forEach(figure => {
+        const worksElement = document.createElement("figure");
         const imageElement = document.createElement("img");
         imageElement.src = figure.imageUrl;
         imageElement.alt = figure.title;
@@ -18,9 +19,9 @@ function genererWorks(works) {
         const descriptionElement = document.createElement("figcaption");
         descriptionElement.innerText = figure.title;
 
-        sectionGallery.appendChild(worksElement);
         worksElement.appendChild(imageElement);
         worksElement.appendChild(descriptionElement);
+        sectionGallery.appendChild(worksElement);
     });
 };
 
