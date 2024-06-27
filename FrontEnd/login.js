@@ -19,7 +19,7 @@ function connectionLogin() {
 
         //Appel à la fonction fetch
         try {
-            fetch("http://localhost:5678/api/users/login", {
+            const response = await fetch("http://localhost:5678/api/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData)
@@ -45,6 +45,4 @@ function connectionLogin() {
     });
 };
 
-
-
-// response : userId + token à conserver 
+connectionLogin()
