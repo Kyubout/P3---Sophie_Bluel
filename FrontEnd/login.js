@@ -4,7 +4,7 @@ const passInput = document.getElementById("mdp");
 
 function connectionLogin() {
 
-    loginForm.addEventListener("submit", async function (event) {
+    loginForm.addEventListener("submit", async function(event){
         event.preventDefault();
 
         //Récupération des données utilisateurs 
@@ -27,19 +27,20 @@ function connectionLogin() {
 
             //Vérification de la réponse
             if (response.ok) {
-                const token = await response.json();
-                console.log("Data de l'utilisateur :", token);
+                const data = await response.json();
+                console.log("Data de l'utilisateur :", data);
                 //Stockage du token dans le localStorage
+                const token = data.token
                 localStorage.setItem("token", token);
                 //Redirection vers la page d'accueil
                 window.location.href = "index.html";
             } else {
-                alert("Email ou mot de passe incorrect")
+                alert("Email ou mot de passe incorrect 401")
             }
 
         } catch (error) {
             console.error('Erreur :', error);
-            alert("Erreur")
+            alert("Erreur de connexion 404")
         }
     });
 };
