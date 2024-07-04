@@ -74,8 +74,25 @@ body {
 
 header {
   display: flex;
+  flex-direction: column;
+}
+
+.nav-menu {
+  display: flex;
   justify-content: space-between;
   margin: 50px 0
+}
+
+.admin-mode {
+  display: none;
+  background-color: black;
+  padding: 20px;
+}
+
+.admin-mode > .edit-btn {
+  color: white;
+  justify-self: center;
+
 }
 
 main {
@@ -167,6 +184,14 @@ li:hover {
   margin-bottom: 1em;
 }
 
+.edit-btn {
+  color: black;
+  background-color: transparent;
+  gap: 10px;
+  cursor: pointer;
+  display: none;
+}
+
 .filtres button {
   font-family:'Syne';
   font-size: 16px;
@@ -176,6 +201,7 @@ li:hover {
   border: solid 1px var(--title-color);
   border-radius: 60px;
   padding: 10px 20px;
+  cursor: pointer;
 }
 
 .filtres button:hover {

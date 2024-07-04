@@ -3,7 +3,6 @@ const emailInput = document.getElementById("email");
 const passInput = document.getElementById("mdp");
 
 function connectionLogin() {
-
     loginForm.addEventListener("submit", async function(event){
         event.preventDefault();
 
@@ -31,16 +30,15 @@ function connectionLogin() {
                 console.log("Data de l'utilisateur :", data);
                 //Stockage du token dans le localStorage
                 const token = data.token
-                localStorage.setItem("token", token);
+                localStorage.setItem("authToken", token);
                 //Redirection vers la page d'accueil
                 window.location.href = "index.html";
             } else {
-                alert("Email ou mot de passe incorrect 401")
+                alert("Email ou mot de passe incorrect") //code 401
             }
-
         } catch (error) {
             console.error('Erreur :', error);
-            alert("Erreur de connexion 404")
+            alert("Erreur de connexion") //code 404
         }
     });
 };
