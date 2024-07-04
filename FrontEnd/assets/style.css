@@ -63,40 +63,43 @@ table {
   --logo-color: #B1663C;
 }
 
-
 body {
-  max-width: 1140px;
-  margin: auto;
   font-family: 'Work Sans';
   font-size: 14px;
   background-color: var(--main-bg-color);
 }
 
+main{
+  max-width: 1140px;
+  margin: auto;
+  padding: 0px 80px;
+}
+
 header {
   display: flex;
   flex-direction: column;
-}
-
-.nav-menu {
-  display: flex;
-  justify-content: space-between;
-  margin: 50px 0
+  align-items: center;
 }
 
 .admin-mode {
   display: none;
   background-color: black;
   padding: 20px;
+  width: 100%;
 }
 
 .admin-mode > .edit-btn {
   color: white;
   justify-self: center;
-
 }
 
-main {
-  padding: 0px 80px;
+.nav-menu {
+  max-width: 1140px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 50px 0
 }
 
 section {
@@ -181,6 +184,13 @@ li:hover {
 
 #portfolio h2 {
   text-align: center;
+}
+
+.edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
   margin-bottom: 1em;
 }
 
@@ -281,6 +291,7 @@ input[type="submit"] {
 footer {
   display: flex;
   justify-content: flex-end;
+  background-color: white;
 }
 
 footer nav ul {
