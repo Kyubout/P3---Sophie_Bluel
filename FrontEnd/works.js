@@ -47,26 +47,50 @@ function genererButton(catId, catName) {
     })
 };
 
-//Fonction du mode admin
+//Modifications si mode admin
 const loginElement = document.getElementById("login-btn");
-const btnEditionMode = document.getElementById("admin-btn");
-const btnModifier = document.getElementById("edit-works");
-const adminBanner = document.querySelector(".admin-mode")
+
+//const btnModifier = document.getElementById("edit-works");
+
+
+    //création icone pen-to-square
+const editIcon = document.createElement("i");
+editIcon.classList.add("fa-solid", "fa-pen-to-square");
+
+    //création div bannière du mode édition
+const header = document.querySelector("header");
+const adminBanner = document.createElement("div");
+adminBanner.classList.add("admin-mode");
+
+const btnEditionMode = document.createElement("button");
+btnEditionMode.id = "admin-btn"; //! Utile ???  
+btnEditionMode.classList.add("edit-btn");
+
+    //création bouton modifier
+const divEdit = document.querySelector(".edit");
+const btnModifier = document.createElement("button");
+btnModifier.id = "edit-works"; //! Utile ???? 
+btnModifier.classList.add("edit-btn"); 
 
 function afficherModeAdmin() {
     //Affichage des nouveaux éléments 
-    adminBanner.style.display = "grid";
-    btnEditionMode.style.display = "flex";
-    btnModifier.style.display = "inline-block";
+    header.insertBefore(adminBanner, header.firstChild);
+    adminBanner.appendChild(btnEditionMode);
+    btnEditionMode.appendChild(editIcon);
+    btnEditionMode.innerHTML += " mode édition"
+
+    divEdit.appendChild(btnModifier);
+    btnModifier.appendChild(editIcon);
+    btnModifier.innerHTML += " modifier"
+
     loginElement.innerText = "logout";
+
     //Listener pour la déconnexion
     loginElement.addEventListener("click", () => {
         localStorage.removeItem("authToken");
         window.location.href = "index.html";
     });
 };
-
-//<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
 
 // Vérification connection
 const token = localStorage.getItem("authToken");
@@ -87,4 +111,3 @@ if (token !== null) {
 
 //Premier affichage de la page
 genererWorks(works);
-

@@ -82,7 +82,7 @@ header {
 }
 
 .admin-mode {
-  display: none;
+  display: grid;
   background-color: black;
   padding: 20px;
   width: 100%;
@@ -190,7 +190,7 @@ li:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 50px;
+  gap: 30px;
   margin-bottom: 1em;
 }
 
@@ -199,7 +199,7 @@ li:hover {
   background-color: transparent;
   gap: 10px;
   cursor: pointer;
-  display: none;
+  display: flex;
 }
 
 .filtres button {
@@ -225,7 +225,6 @@ li:hover {
   justify-content: center;
   gap: 10px;
 }
-
 
 .gallery {
   width: 100%;
@@ -296,6 +295,12 @@ footer {
 
 footer nav ul {
   margin: 2em
+}
+
+#login-foot {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 /****** Page LogIn******/
