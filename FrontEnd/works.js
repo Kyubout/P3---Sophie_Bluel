@@ -1,13 +1,14 @@
 //Récupération des éléments depuis l'API
-const reponse = await fetch("http://localhost:5678/api/works");
-const works = await reponse.json();
+const response = await fetch("http://localhost:5678/api/works");
+let works = await response.json();
 
-const reponseC = await fetch("http://localhost:5678/api/categories");
-const categories = await reponseC.json();
+const responseC = await fetch("http://localhost:5678/api/categories");
+const categories = await responseC.json();
 
 //Eléments figures/figcaption des travaux
 function genererWorks(works) {
     const sectionGallery = document.querySelector(".gallery");
+    sectionGallery.innerHTML="";
     works.forEach(figure => {
         const worksElement = document.createElement("figure");
         const imageElement = document.createElement("img");
@@ -117,9 +118,6 @@ genererWorks(works);
 const closeIcon = document.createElement("i");
 closeIcon.classList.add("fa-solid", "fa-xmark");
 
-const trashIcon = document.createElement("i");
-trashIcon.classList.add("fa-solid", "fa-trash");
-
 const backIcon = document.createElement("i");
 backIcon.classList.add("fa-solid", "fa-arrow-left");
 
@@ -135,6 +133,9 @@ modalWrapper.classList.add("modal-wrapper");
 const editGallery = document.createElement("div");
 editGallery.classList.add("gallerie-photo");
 
+const addWork = document.createElement("div");
+addWork.classList.add("add-work");
+
 const closeButton = document.createElement("button");
 closeButton.classList.add("close-btn");
 closeButton.appendChild(closeIcon);
@@ -149,29 +150,82 @@ btnAddPhoto.type = "submit";
 btnAddPhoto.id = "btn-ajout";
 btnAddPhoto.value = "Ajouter une photo";
 
-function openModal() {
+function openModal1() {
     divEdit.appendChild(modal); 
     modal.style.display = null;
     modal.appendChild(modalWrapper);
     modalWrapper.appendChild(editGallery);
     editGallery.appendChild(closeButton);
-    modalTitle.innerText = "Galerie photo"
     editGallery.appendChild(modalTitle);
+    modalTitle.innerText = "Galerie photo";
     editGallery.appendChild(displayPhoto);
     editGallery.appendChild(btnAddPhoto);
 }
 
+// function openModal2() {
+//     displayPhoto.innerHTML = "";
+//     divEdit.appendChild(modal); 
+//     modal.style.display = null;
+//     modal.appendChild(modalWrapper);
+//     modalWrapper.appendChild(addWork);
+//     addWork.appendChild(closeButton);
+//     addWork.
+// }
 
+// Récupération et affichages des travaux
+function worksModal() {
+    displayPhoto.innerHTML = "";
+    works.forEach((work) => {
+        const imgContainer = document.createElement("div");
+        imgContainer.classList.add("img-container");
+        imgContainer.setAttribute("id", work.id)
+        const imgModal = document.createElement ("img");
+        imgModal.classList.add("img-modal");
+        imgModal.src = work.imageUrl;
+        imgModal.alt = work.title;
+        const trashIcon = document.createElement("i");
+        trashIcon.classList.add("fa-solid", "fa-trash-can");
+        const trashButton = document.createElement("button");
+        trashButton.classList.add("trash-btn");
+        trashButton.addEventListener("click", () => deleteWork(work.id));
 
+        displayPhoto.appendChild(imgContainer);
+        imgContainer.appendChild(imgModal);
+        imgContainer.appendChild(trashButton);
+        trashButton.appendChild(trashIcon);
+    })
+};
 
+//Fonction suppression 
+async function deleteWork(id) {
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${id}`,{
+            method: "DELETE",
+            headers: {
+                "Authorization" : "Bearer " + token
+            }
+        })
+        if (response.ok) { //code 200
+            works = works.filter(item => item.id != id);
+            worksModal();
+            genererWorks(works);
+        } else {
+            alert("Suppression non autorisée") //code 401
+        }
+    } catch (error) {
+        console.error('Erreur :', error);
+        alert("Erreur de connexion") //code 500
+    }
+};
+
+// Ouverture modale lors du clic sur les boutons Modifier
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", function(e) {
         e.preventDefault();
-        openModal();
+        openModal1();
+        worksModal();
     })
 });
 
-closeButton.addEventListener("click", function(e) {
-    e.preventDefault();
-    modal.style.display = "none";
-});
+//Fermeture modale 
+closeButton.addEventListener("click", () => modal.style.display = "none")
