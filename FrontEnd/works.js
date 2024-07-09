@@ -50,12 +50,10 @@ function genererButton(catId, catName) {
 //Modifications si mode admin
 const loginElement = document.getElementById("login-btn");
 
-//const btnModifier = document.getElementById("edit-works");
-
-
     //création icone pen-to-square
 const editIcon = document.createElement("i");
 editIcon.classList.add("fa-solid", "fa-pen-to-square");
+editIcon.setAttribute("aria-hidden", "true");
 
     //création div bannière du mode édition
 const header = document.querySelector("header");
@@ -63,13 +61,13 @@ const adminBanner = document.createElement("div");
 adminBanner.classList.add("admin-mode");
 
 const btnEditionMode = document.createElement("button");
-btnEditionMode.id = "admin-btn"; //! Utile ???  
+btnEditionMode.id = "admin-btn"; //TODO: Utile ???  
 btnEditionMode.classList.add("edit-btn");
 
     //création bouton modifier
 const divEdit = document.querySelector(".edit");
 const btnModifier = document.createElement("button");
-btnModifier.id = "edit-works"; //! Utile ???? 
+btnModifier.id = "edit-works"; //TODO: Utile ???? 
 btnModifier.classList.add("edit-btn"); 
 
 function afficherModeAdmin() {
@@ -92,7 +90,7 @@ function afficherModeAdmin() {
     });
 };
 
-// Vérification connection
+//! Vérification de la connection admin et affichage en fonction
 const token = localStorage.getItem("authToken");
 if (token !== null) {
     console.log(token);
@@ -111,3 +109,69 @@ if (token !== null) {
 
 //Premier affichage de la page
 genererWorks(works);
+
+
+//! Création de la modale 
+
+//Icones back, close et trash
+const closeIcon = document.createElement("i");
+closeIcon.classList.add("fa-solid", "fa-xmark");
+
+const trashIcon = document.createElement("i");
+trashIcon.classList.add("fa-solid", "fa-trash");
+
+const backIcon = document.createElement("i");
+backIcon.classList.add("fa-solid", "fa-arrow-left");
+
+//Elements de la modale
+const modal = document.createElement("aside");
+modal.classList.add("modal");
+modal.setAttribute("role", "dialog");
+modal.style.display = "none";
+
+const modalWrapper = document.createElement("div");
+modalWrapper.classList.add("modal-wrapper");
+
+const editGallery = document.createElement("div");
+editGallery.classList.add("gallerie-photo");
+
+const closeButton = document.createElement("button");
+closeButton.classList.add("close-btn");
+closeButton.appendChild(closeIcon);
+
+const modalTitle = document.createElement("h3");
+
+const displayPhoto = document.createElement("div");
+displayPhoto.classList.add("display-photo");
+
+const btnAddPhoto = document.createElement("input");
+btnAddPhoto.type = "submit";
+btnAddPhoto.id = "btn-ajout";
+btnAddPhoto.value = "Ajouter une photo";
+
+function openModal() {
+    divEdit.appendChild(modal); 
+    modal.style.display = null;
+    modal.appendChild(modalWrapper);
+    modalWrapper.appendChild(editGallery);
+    editGallery.appendChild(closeButton);
+    modalTitle.innerText = "Galerie photo"
+    editGallery.appendChild(modalTitle);
+    editGallery.appendChild(displayPhoto);
+    editGallery.appendChild(btnAddPhoto);
+}
+
+
+
+
+document.querySelectorAll(".edit-btn").forEach(button => {
+    button.addEventListener("click", function(e) {
+        e.preventDefault();
+        openModal();
+    })
+});
+
+closeButton.addEventListener("click", function(e) {
+    e.preventDefault();
+    modal.style.display = "none";
+});
