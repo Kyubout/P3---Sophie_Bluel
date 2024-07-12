@@ -165,11 +165,6 @@ uploadContainer.classList.add("upload-container");
 uploadContainer.setAttribute("for", "add-img");
 uploadForm.appendChild(uploadContainer);
 
-// const imgPreview = document.createElement("img");
-// imgPreview.src = "";
-// imgPreview.classList.add(img-imgPreview); 
-// uploadContainer.appendChild(imgPreview);
-
 const imageIcon = document.createElement("i");
 imageIcon.classList.add("fa-regular", "fa-image");
 uploadContainer.appendChild(imageIcon);
@@ -216,7 +211,8 @@ uploadForm.appendChild(menuCategory);
 
 const optionInit = document.createElement("option");
 optionInit.value = "";
-// optionInit.text = "Sélectionnez une catégorie";
+optionInit.disabled = "disabled";
+optionInit.text = "Sélectionnez une catégorie";
 menuCategory.appendChild(optionInit);
 
 menuCategory.addEventListener("click", async() => {
@@ -227,13 +223,13 @@ menuCategory.addEventListener("click", async() => {
         optionCategory.text = category.name;
         menuCategory.appendChild(optionCategory);
         })
-    } else {
-        const selectedOption = menuCategory.options[menuCategory.selectedIndex];
-        if (selectedOption.value !== "") {
-            categoryName = selectedOption.text;
-            categoryId = selectedOption.value;
-            //TODO + changer état du bouton de soumission
-        }
+    // } else {
+        // const selectedOption = menuCategory.options[menuCategory.selectedIndex];
+        // if (selectedOption.value !== "") {
+        //     categoryName = selectedOption.text;
+        //     categoryId = selectedOption.value;
+        //     //TODO + changer état du bouton de soumission
+        // }
     };
 });
 
@@ -246,6 +242,20 @@ btnValider.type = "submit";
 btnValider.id = "btn-valider";
 btnValider.value = "Valider";
 uploadForm.appendChild(btnValider);
+
+//Affichage preview image 
+inputAddImg.addEventListener("change", previewInput)
+function previewInput({target}) {
+    const file = target.files[0];
+    const fileSrc = URL.createObjectURL(file);
+    const imgPreview = document.createElement("img");
+    imgPreview.src = fileSrc;
+    imgPreview.classList.add("img-preview");
+    uploadContainer.innerHTML="";
+    uploadContainer.style.padding = "0";
+    uploadContainer.appendChild(imgPreview);
+    console.log(inputAddImg.value);
+};
 
 // Fonction affichage modales 1 et 2
 function openModal1() {
@@ -318,6 +328,15 @@ async function deleteWork(id) {
     }
 };
 
+//Fonction pour vider le formulaire
+function resetForm() {
+    // imgPreview
+    inputAddImg.value ="";
+    uploadTitle.value = "";
+    menuCategory.value = optionInit;
+}
+
+
 // Ouverture modale lors du clic sur les boutons Modifier
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", function(e) {
@@ -328,11 +347,16 @@ document.querySelectorAll(".edit-btn").forEach(button => {
     })
 });
 
-//Fermeture modale 
-closeButton.addEventListener("click", () => 
-    // uploadForm.reset();
-    modal.style.display = "none"
-);
+//Fermeture modale (click sur la croix, ou en dehors de la modale)
+closeButton.addEventListener("click", function(e) {
+    resetForm();
+    modal.style.display = "none";
+});
+window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+        resetForm();
+}});
 
 //Ouverture modale 2 Ajout photo 
 btnAddPhoto.addEventListener("click", function(e) {
@@ -343,5 +367,6 @@ btnAddPhoto.addEventListener("click", function(e) {
 //Retour sur modale 1 via backButton
 backButton.addEventListener("click", function(e) {
     modalWrapper.innerHTML="";
+    resetForm();
     openModal1();
 });
