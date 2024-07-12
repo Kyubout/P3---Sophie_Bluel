@@ -3,7 +3,7 @@ const response = await fetch("http://localhost:5678/api/works");
 let works = await response.json();
 
 const responseC = await fetch("http://localhost:5678/api/categories");
-const categories = await responseC.json();
+let categories = await responseC.json();
 
 //Eléments figures/figcaption des travaux
 function genererWorks(works) {
@@ -114,7 +114,7 @@ genererWorks(works);
 
 //! Création de la modale 
 
-//Icones back, close et trash
+//Icones back et close 
 const closeIcon = document.createElement("i");
 closeIcon.classList.add("fa-solid", "fa-xmark");
 
@@ -140,6 +140,10 @@ const closeButton = document.createElement("button");
 closeButton.classList.add("close-btn");
 closeButton.appendChild(closeIcon);
 
+const backButton = document.createElement("button");
+backButton.classList.add("back-btn");
+backButton.appendChild(backIcon);
+
 const modalTitle = document.createElement("h3");
 
 const displayPhoto = document.createElement("div");
@@ -150,6 +154,100 @@ btnAddPhoto.type = "submit";
 btnAddPhoto.id = "btn-ajout";
 btnAddPhoto.value = "Ajouter une photo";
 
+//Formulaire ajout photo
+const uploadForm = document.createElement("form");
+uploadForm.id = "upload-form";
+uploadForm.setAttribute("method", "post");
+uploadForm.setAttribute("enctype", "multipart/form-data");
+
+const uploadContainer = document.createElement("label");
+uploadContainer.classList.add("upload-container");
+uploadContainer.setAttribute("for", "add-img");
+uploadForm.appendChild(uploadContainer);
+
+// const imgPreview = document.createElement("img");
+// imgPreview.src = "";
+// imgPreview.classList.add(img-imgPreview); 
+// uploadContainer.appendChild(imgPreview);
+
+const imageIcon = document.createElement("i");
+imageIcon.classList.add("fa-regular", "fa-image");
+uploadContainer.appendChild(imageIcon);
+
+const labelAddImg = document.createElement("label");
+labelAddImg.id = "label-addimg";
+labelAddImg.setAttribute("for", "add-img");
+labelAddImg.innerText = "+ Ajouter photo";
+uploadContainer.appendChild(labelAddImg);
+
+const inputAddImg = document.createElement("input");
+inputAddImg.type = "file";
+inputAddImg.id = "add-img";
+inputAddImg.name = "add-img";
+uploadContainer.appendChild(inputAddImg);
+
+const addLimits = document.createElement("p");
+addLimits.innerText = "jpg, png : 4mo max";
+uploadContainer.appendChild(addLimits);
+
+const UploadTitleLabel = document.createElement("label");
+UploadTitleLabel.setAttribute("for", "title");
+UploadTitleLabel.innerText = "Titre";
+uploadForm.appendChild(UploadTitleLabel);
+
+const uploadTitle = document.createElement("input");
+uploadTitle.type = "text"; 
+uploadTitle.id = "title";
+uploadTitle.name = "title";
+uploadTitle.setAttribute("required", "true");
+uploadForm.appendChild(uploadTitle);
+
+const UploadCatLabel = document.createElement("label");
+UploadCatLabel.setAttribute("for", "category");
+UploadCatLabel.innerText = "Catégorie";
+uploadForm.appendChild(UploadCatLabel);
+
+const menuCategory = document.createElement("select");
+menuCategory.id = "category";
+menuCategory.name = "category";
+menuCategory.setAttribute("required", "true")
+menuCategory.classList.add("menu-category");
+uploadForm.appendChild(menuCategory);
+
+const optionInit = document.createElement("option");
+optionInit.value = "";
+// optionInit.text = "Sélectionnez une catégorie";
+menuCategory.appendChild(optionInit);
+
+menuCategory.addEventListener("click", async() => {
+    if (menuCategory.options.length === 1) {
+    categories.forEach((category) => {
+        const optionCategory = document.createElement("option");
+        optionCategory.value = category.id;
+        optionCategory.text = category.name;
+        menuCategory.appendChild(optionCategory);
+        })
+    } else {
+        const selectedOption = menuCategory.options[menuCategory.selectedIndex];
+        if (selectedOption.value !== "") {
+            categoryName = selectedOption.text;
+            categoryId = selectedOption.value;
+            //TODO + changer état du bouton de soumission
+        }
+    };
+});
+
+const greyLine = document.createElement("span");
+greyLine.classList.add("grey-line");
+uploadForm.appendChild(greyLine);
+
+const btnValider = document.createElement("input");
+btnValider.type = "submit";
+btnValider.id = "btn-valider";
+btnValider.value = "Valider";
+uploadForm.appendChild(btnValider);
+
+// Fonction affichage modales 1 et 2
 function openModal1() {
     divEdit.appendChild(modal); 
     modal.style.display = null;
@@ -162,15 +260,17 @@ function openModal1() {
     editGallery.appendChild(btnAddPhoto);
 }
 
-// function openModal2() {
-//     displayPhoto.innerHTML = "";
-//     divEdit.appendChild(modal); 
-//     modal.style.display = null;
-//     modal.appendChild(modalWrapper);
-//     modalWrapper.appendChild(addWork);
-//     addWork.appendChild(closeButton);
-//     addWork.
-// }
+function openModal2() {
+    divEdit.appendChild(modal); 
+    modal.style.display = null;
+    modal.appendChild(modalWrapper);
+    modalWrapper.appendChild(addWork);
+    addWork.appendChild(closeButton);
+    addWork.appendChild(backButton);
+    addWork.appendChild(modalTitle);
+    modalTitle.innerText = "Ajout photo";
+    addWork.appendChild(uploadForm);
+}
 
 // Récupération et affichages des travaux
 function worksModal() {
@@ -222,10 +322,26 @@ async function deleteWork(id) {
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", function(e) {
         e.preventDefault();
+        modalWrapper.innerHTML="";
         openModal1();
         worksModal();
     })
 });
 
 //Fermeture modale 
-closeButton.addEventListener("click", () => modal.style.display = "none")
+closeButton.addEventListener("click", () => 
+    // uploadForm.reset();
+    modal.style.display = "none"
+);
+
+//Ouverture modale 2 Ajout photo 
+btnAddPhoto.addEventListener("click", function(e) {
+    modalWrapper.innerHTML="";
+    openModal2();
+});
+
+//Retour sur modale 1 via backButton
+backButton.addEventListener("click", function(e) {
+    modalWrapper.innerHTML="";
+    openModal1();
+});
