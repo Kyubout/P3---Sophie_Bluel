@@ -165,6 +165,10 @@ uploadContainer.classList.add("upload-container");
 uploadContainer.setAttribute("for", "add-img");
 uploadForm.appendChild(uploadContainer);
 
+const imgPreview = document.createElement("img");
+imgPreview.classList.add("img-preview");
+uploadContainer.appendChild(imgPreview);
+
 const imageIcon = document.createElement("i");
 imageIcon.classList.add("fa-regular", "fa-image");
 uploadContainer.appendChild(imageIcon);
@@ -211,27 +215,22 @@ uploadForm.appendChild(menuCategory);
 
 const optionInit = document.createElement("option");
 optionInit.value = "";
-optionInit.disabled = "disabled";
+optionInit.disabled = true;
 optionInit.text = "Sélectionnez une catégorie";
 menuCategory.appendChild(optionInit);
 
-menuCategory.addEventListener("click", async() => {
-    if (menuCategory.options.length === 1) {
-    categories.forEach((category) => {
-        const optionCategory = document.createElement("option");
-        optionCategory.value = category.id;
-        optionCategory.text = category.name;
-        menuCategory.appendChild(optionCategory);
-        })
-    // } else {
-        // const selectedOption = menuCategory.options[menuCategory.selectedIndex];
-        // if (selectedOption.value !== "") {
-        //     categoryName = selectedOption.text;
-        //     categoryId = selectedOption.value;
-        //     //TODO + changer état du bouton de soumission
-        // }
-    };
+categories.forEach((category) => {
+    const optionCategory = document.createElement("option");
+    optionCategory.value = category.id;
+    optionCategory.text = category.name;
+    menuCategory.appendChild(optionCategory);
 });
+
+menuCategory.selectedIndex = -1;
+
+uploadTitle.addEventListener("input", disabledOrNot);
+menuCategory.addEventListener("click", disabledOrNot);
+
 
 const greyLine = document.createElement("span");
 greyLine.classList.add("grey-line");
@@ -243,19 +242,47 @@ btnValider.id = "btn-valider";
 btnValider.value = "Valider";
 uploadForm.appendChild(btnValider);
 
+// Activer le bouton Valider de la modale 2
+function disabledOrNot() {
+    const file = inputAddImg.files[0];
+    if ( !file ||
+        inputAddImg.value === "" ||
+        uploadTitle.value.trim() === "" ||
+        menuCategory.value === "" ) {
+            btnValider.disabled = true;
+            btnValider.style.cursor = "not-allowed";
+            btnValider.style.backgroundColor = "#a7a7a7";
+        } else {
+            btnValider.disabled = false;
+            btnValider.style.cursor = "pointer";
+            btnValider.style.backgroundColor = "#1d6154"
+            addWorks();
+        }
+}
+
 //Affichage preview image 
-inputAddImg.addEventListener("change", previewInput)
-function previewInput({target}) {
-    const file = target.files[0];
+inputAddImg.addEventListener("change", () => {
+    const file = inputAddImg.files[0];
     const fileSrc = URL.createObjectURL(file);
-    const imgPreview = document.createElement("img");
-    imgPreview.src = fileSrc;
-    imgPreview.classList.add("img-preview");
-    uploadContainer.innerHTML="";
-    uploadContainer.style.padding = "0";
-    uploadContainer.appendChild(imgPreview);
-    console.log(inputAddImg.value);
-};
+    // Vérification du type (jpeg et png)
+    if (file.type === "image/jpeg" || file.type === "image/png") {
+        // Vérification de la taille (4Mo)
+        if (file.size <= 4000000) {
+                console.log("ça marche!!!!");
+                uploadContainer.style.padding = "0";
+                imageIcon.style.display = "none";
+                labelAddImg.style.display = "none";
+                addLimits.style.display = "none";
+                imgPreview.src = fileSrc;
+                disabledOrNot()
+        } else {
+            console.log ("Fichier trop lourd");
+            alert("Fichier trop lourd !");
+        } 
+    } else {
+        console.log ("Pas le bon type");
+        alert("Veuillez sélectionner une image jpeg ou png.")
+}});
 
 // Fonction affichage modales 1 et 2
 function openModal1() {
@@ -280,6 +307,7 @@ function openModal2() {
     addWork.appendChild(modalTitle);
     modalTitle.innerText = "Ajout photo";
     addWork.appendChild(uploadForm);
+    disabledOrNot();
 }
 
 // Récupération et affichages des travaux
@@ -328,14 +356,61 @@ async function deleteWork(id) {
     }
 };
 
+//Fonction ajout photo 
+function addWorks() {
+    btnValider.addEventListener("click", async function(event){
+        event.preventDefault();
+
+        //Récupération des données du formulaire
+        const workImg = inputAddImg.files[0];
+        const workTitle = uploadTitle.value.trim();
+        const workCatId = menuCategory.value;
+
+        const formData = new FormData();
+        formData.append("title", workTitle);
+        formData.append("image", workImg);
+        formData.append("category", workCatId)
+        console.log(formData);
+        console.log(token);
+
+        //Fonction fetch
+        try {
+            const response = await fetch("http://localhost:5678/api/works", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Accept" : "application/json",
+                    "Content-Type" : "multipart/form-data",
+                    "Authorization": "Bearer " + token,
+                }
+            });
+            if (response.ok) {
+                works.append(response.json())
+                genererWorks(works);
+                resetForm();
+                modal.style.display = "none";
+            } else {
+                alert("Non-autorisé") //code 401
+            };
+        }catch (error) {
+            console.error('Erreur :', error);
+            alert("Erreur de connexion") //code 404
+    }});
+};
+
+
 //Fonction pour vider le formulaire
 function resetForm() {
     // imgPreview
     inputAddImg.value ="";
     uploadTitle.value = "";
-    menuCategory.value = optionInit;
+    menuCategory.selectedIndex = -1;
+    uploadContainer.style.padding = "15px";
+    imageIcon.style.display = null;
+    labelAddImg.style.display = null;
+    addLimits.style.display = null;
+    imgPreview.src = "";
 }
-
 
 // Ouverture modale lors du clic sur les boutons Modifier
 document.querySelectorAll(".edit-btn").forEach(button => {
