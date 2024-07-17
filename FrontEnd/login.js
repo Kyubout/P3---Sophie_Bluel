@@ -3,7 +3,7 @@ const emailInput = document.getElementById("email");
 const passInput = document.getElementById("mdp");
 
 function connectionLogin() {
-    loginForm.addEventListener("submit", async function(event){
+    loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         //Récupération des données utilisateurs 
@@ -34,7 +34,7 @@ function connectionLogin() {
                 //Redirection vers la page d'accueil
                 window.location.href = "index.html";
             } else {
-                alert("Email ou mot de passe incorrect") //code 401
+                alert("Email et/ou mot de passe incorrect") //code 401
             }
         } catch (error) {
             console.error('Erreur :', error);

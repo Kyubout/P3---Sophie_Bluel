@@ -8,7 +8,7 @@ let categories = await responseC.json();
 //Eléments figures/figcaption des travaux
 function genererWorks(works) {
     const sectionGallery = document.querySelector(".gallery");
-    sectionGallery.innerHTML="";
+    sectionGallery.innerHTML = "";
     works.forEach(figure => {
         const worksElement = document.createElement("figure");
         const imageElement = document.createElement("img");
@@ -51,25 +51,23 @@ function genererButton(catId, catName) {
 //Modifications si mode admin
 const loginElement = document.getElementById("login-btn");
 
-    //création icone pen-to-square
+//création icone pen-to-square
 const editIcon = document.createElement("i");
 editIcon.classList.add("fa-solid", "fa-pen-to-square");
 editIcon.setAttribute("aria-hidden", "true");
 
-    //création div bannière du mode édition
+//création div bannière du mode édition
 const header = document.querySelector("header");
 const adminBanner = document.createElement("div");
 adminBanner.classList.add("admin-mode");
 
-const btnEditionMode = document.createElement("button");
-btnEditionMode.id = "admin-btn"; //TODO: Utile ???  
+const btnEditionMode = document.createElement("button"); 
 btnEditionMode.classList.add("edit-btn");
 
-    //création bouton modifier
+//création bouton modifier
 const divEdit = document.querySelector(".edit");
 const btnModifier = document.createElement("button");
-btnModifier.id = "edit-works"; //TODO: Utile ???? 
-btnModifier.classList.add("edit-btn"); 
+btnModifier.classList.add("edit-btn");
 
 function afficherModeAdmin() {
     //Affichage des nouveaux éléments 
@@ -94,7 +92,6 @@ function afficherModeAdmin() {
 //! Vérification de la connection admin et affichage en fonction
 const token = localStorage.getItem("authToken");
 if (token !== null) {
-    console.log(token);
     afficherModeAdmin()
 } else {
     //Appeler la fonction qui génère les boutons 
@@ -111,9 +108,7 @@ if (token !== null) {
 //Premier affichage de la page
 genererWorks(works);
 
-
 //! Création de la modale 
-
 //Icones back et close 
 const closeIcon = document.createElement("i");
 closeIcon.classList.add("fa-solid", "fa-xmark");
@@ -195,7 +190,7 @@ UploadTitleLabel.innerText = "Titre";
 uploadForm.appendChild(UploadTitleLabel);
 
 const uploadTitle = document.createElement("input");
-uploadTitle.type = "text"; 
+uploadTitle.type = "text";
 uploadTitle.id = "title";
 uploadTitle.name = "title";
 uploadTitle.setAttribute("required", "true");
@@ -225,12 +220,10 @@ categories.forEach((category) => {
     optionCategory.text = category.name;
     menuCategory.appendChild(optionCategory);
 });
-
 menuCategory.selectedIndex = -1;
 
 uploadTitle.addEventListener("input", disabledOrNot);
 menuCategory.addEventListener("click", disabledOrNot);
-
 
 const greyLine = document.createElement("span");
 greyLine.classList.add("grey-line");
@@ -245,20 +238,17 @@ uploadForm.appendChild(btnValider);
 // Activer le bouton Valider de la modale 2
 function disabledOrNot() {
     const file = inputAddImg.files[0];
-    if ( !file ||
-        inputAddImg.value === "" ||
-        uploadTitle.value.trim() === "" ||
-        menuCategory.value === "" ) {
-            btnValider.disabled = true;
-            btnValider.style.cursor = "not-allowed";
-            btnValider.style.backgroundColor = "#a7a7a7";
-        } else {
-            btnValider.disabled = false;
-            btnValider.style.cursor = "pointer";
-            btnValider.style.backgroundColor = "#1d6154"
-            addWorks();
-        }
-}
+    if (!file || inputAddImg.value === "" || uploadTitle.value.trim() === "" || menuCategory.value === "") {
+        btnValider.disabled = true;
+        btnValider.style.cursor = "not-allowed";
+        btnValider.style.backgroundColor = "#a7a7a7";
+    } else {
+        btnValider.disabled = false;
+        btnValider.style.cursor = "pointer";
+        btnValider.style.backgroundColor = "#1d6154"
+        btnValider.addEventListener("click", (event) => addWorks(event), { once: true });
+    };
+};
 
 //Affichage preview image 
 inputAddImg.addEventListener("change", () => {
@@ -268,25 +258,23 @@ inputAddImg.addEventListener("change", () => {
     if (file.type === "image/jpeg" || file.type === "image/png") {
         // Vérification de la taille (4Mo)
         if (file.size <= 4000000) {
-                console.log("ça marche!!!!");
-                uploadContainer.style.padding = "0";
-                imageIcon.style.display = "none";
-                labelAddImg.style.display = "none";
-                addLimits.style.display = "none";
-                imgPreview.src = fileSrc;
-                disabledOrNot()
+            uploadContainer.style.padding = "0";
+            imageIcon.style.display = "none";
+            labelAddImg.style.display = "none";
+            addLimits.style.display = "none";
+            imgPreview.src = fileSrc;
+            disabledOrNot()
         } else {
-            console.log ("Fichier trop lourd");
             alert("Fichier trop lourd !");
-        } 
+        }
     } else {
-        console.log ("Pas le bon type");
         alert("Veuillez sélectionner une image jpeg ou png.")
-}});
+    }
+});
 
 // Fonction affichage modales 1 et 2
 function openModal1() {
-    divEdit.appendChild(modal); 
+    divEdit.appendChild(modal);
     modal.style.display = null;
     modal.appendChild(modalWrapper);
     modalWrapper.appendChild(editGallery);
@@ -298,7 +286,7 @@ function openModal1() {
 }
 
 function openModal2() {
-    divEdit.appendChild(modal); 
+    divEdit.appendChild(modal);
     modal.style.display = null;
     modal.appendChild(modalWrapper);
     modalWrapper.appendChild(addWork);
@@ -317,7 +305,7 @@ function worksModal() {
         const imgContainer = document.createElement("div");
         imgContainer.classList.add("img-container");
         imgContainer.setAttribute("id", work.id)
-        const imgModal = document.createElement ("img");
+        const imgModal = document.createElement("img");
         imgModal.classList.add("img-modal");
         imgModal.src = work.imageUrl;
         imgModal.alt = work.title;
@@ -337,10 +325,10 @@ function worksModal() {
 //Fonction suppression 
 async function deleteWork(id) {
     try {
-        const response = await fetch(`http://localhost:5678/api/works/${id}`,{
+        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
             method: "DELETE",
             headers: {
-                "Authorization" : "Bearer " + token
+                "Authorization": "Bearer " + token
             }
         })
         if (response.ok) { //code 200
@@ -348,7 +336,7 @@ async function deleteWork(id) {
             worksModal();
             genererWorks(works);
         } else {
-            alert("Suppression non autorisée") //code 401
+            alert("Suppression non-autorisée") //code 401
         }
     } catch (error) {
         console.error('Erreur :', error);
@@ -357,52 +345,48 @@ async function deleteWork(id) {
 };
 
 //Fonction ajout photo 
-function addWorks() {
-    btnValider.addEventListener("click", async function(event){
-        event.preventDefault();
+async function addWorks(event) {
+    event.preventDefault();
 
-        //Récupération des données du formulaire
-        const workImg = inputAddImg.files[0];
-        const workTitle = uploadTitle.value.trim();
-        const workCatId = menuCategory.value;
+    //Récupération des données du formulaire
+    const workImg = inputAddImg.files[0];
+    const workTitle = uploadTitle.value.trim();
+    const workCatId = menuCategory.value;
 
-        const formData = new FormData();
-        formData.append("title", workTitle);
-        formData.append("image", workImg);
-        formData.append("category", workCatId)
-        console.log(formData);
-        console.log(token);
+    const formData = new FormData();
+    formData.append("title", workTitle);
+    formData.append("image", workImg);
+    formData.append("category", workCatId)
 
-        //Fonction fetch
-        try {
-            const response = await fetch("http://localhost:5678/api/works", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Accept" : "application/json",
-                    "Content-Type" : "multipart/form-data",
-                    "Authorization": "Bearer " + token,
-                }
-            });
-            if (response.ok) {
-                works.append(response.json())
-                genererWorks(works);
-                resetForm();
-                modal.style.display = "none";
-            } else {
-                alert("Non-autorisé") //code 401
-            };
-        }catch (error) {
-            console.error('Erreur :', error);
-            alert("Erreur de connexion") //code 404
-    }});
+    //Fonction fetch
+    try {
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+        if (response.ok) {
+            const newWork = await response.json();
+            works.push(newWork);
+            genererWorks(works);
+            resetForm();
+            modal.style.display = "none";
+        } else {
+            console.log(response);
+            alert("Accès non-autorisé") //code 401
+        };
+    } catch (error) {
+        console.error('Erreur :', error);
+        alert("Erreur de connexion") //code 404
+    };
 };
-
 
 //Fonction pour vider le formulaire
 function resetForm() {
-    // imgPreview
-    inputAddImg.value ="";
+    inputAddImg.value = "";
     uploadTitle.value = "";
     menuCategory.selectedIndex = -1;
     uploadContainer.style.padding = "15px";
@@ -414,34 +398,35 @@ function resetForm() {
 
 // Ouverture modale lors du clic sur les boutons Modifier
 document.querySelectorAll(".edit-btn").forEach(button => {
-    button.addEventListener("click", function(e) {
+    button.addEventListener("click", function (e) {
         e.preventDefault();
-        modalWrapper.innerHTML="";
+        modalWrapper.innerHTML = "";
         openModal1();
         worksModal();
     })
 });
 
 //Fermeture modale (click sur la croix, ou en dehors de la modale)
-closeButton.addEventListener("click", function(e) {
+closeButton.addEventListener("click", function (e) {
     resetForm();
     modal.style.display = "none";
 });
-window.addEventListener('click', function(event) {
+window.addEventListener('click', function (event) {
     if (event.target === modal) {
         modal.style.display = "none";
         resetForm();
-}});
+    }
+});
 
 //Ouverture modale 2 Ajout photo 
-btnAddPhoto.addEventListener("click", function(e) {
-    modalWrapper.innerHTML="";
+btnAddPhoto.addEventListener("click", function (e) {
+    modalWrapper.innerHTML = "";
     openModal2();
 });
 
 //Retour sur modale 1 via backButton
-backButton.addEventListener("click", function(e) {
-    modalWrapper.innerHTML="";
+backButton.addEventListener("click", function (e) {
+    modalWrapper.innerHTML = "";
     resetForm();
     openModal1();
 });
