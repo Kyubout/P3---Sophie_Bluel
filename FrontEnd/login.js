@@ -1,3 +1,10 @@
+const loginSection = document.getElementById("login");
+const loginTitle = document.getElementById("login-title");
+const loginError = document.createElement("p");
+loginError.classList.add("login-error");
+loginSection.appendChild(loginError);
+loginSection.insertBefore(loginError, loginTitle.nextSibling);
+
 const loginForm = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
 const passInput = document.getElementById("mdp");
@@ -34,11 +41,11 @@ function connectionLogin() {
                 //Redirection vers la page d'accueil
                 window.location.href = "index.html";
             } else {
-                alert("Email et/ou mot de passe incorrect") //code 401
+                loginError.innerText = "Email et/ou mot de passe incorrect !"
             }
         } catch (error) {
             console.error('Erreur :', error);
-            alert("Erreur de connexion") //code 404
+            loginError.innerText = "Erreur de connexion"
         }
     });
 };
