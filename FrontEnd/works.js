@@ -235,24 +235,9 @@ btnValider.id = "btn-valider";
 btnValider.value = "Valider";
 uploadForm.appendChild(btnValider);
 
-// Activer le bouton Valider de la modale 2
-function disabledOrNot() {
-    const file = inputAddImg.files[0];
-    if (!file || inputAddImg.value === "" || uploadTitle.value.trim() === "" || menuCategory.value === "") {
-        btnValider.disabled = true;
-        btnValider.style.cursor = "not-allowed";
-        btnValider.style.backgroundColor = "#a7a7a7";
-    } else {
-        btnValider.disabled = false;
-        btnValider.style.cursor = "pointer";
-        btnValider.style.backgroundColor = "#1d6154"
-        btnValider.addEventListener("click", (event) => addWorks(event), { once: true });
-    };
-};
-
 //Affichage preview image 
 inputAddImg.addEventListener("change", () => {
-    const file = inputAddImg.files[0];
+    let file = inputAddImg.files[0];
     const fileSrc = URL.createObjectURL(file);
     // Vérification du type (jpeg et png)
     if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -266,11 +251,39 @@ inputAddImg.addEventListener("change", () => {
             disabledOrNot()
         } else {
             alert("Fichier trop lourd !");
+            imgPreview.removeAttribute("src");
+            disabledOrNot()
+            imageIcon.style.display = null;
+            labelAddImg.style.display = null;
+            addLimits.style.display = null;
+            uploadContainer.style.padding = "15px";
         }
     } else {
-        alert("Veuillez sélectionner une image jpeg ou png.")
+        alert("Veuillez sélectionner une image jpeg ou png.");
+        imgPreview.removeAttribute("src");
+        disabledOrNot()
+        imageIcon.style.display = null;
+        labelAddImg.style.display = null;
+        addLimits.style.display = null;
+        uploadContainer.style.padding = "15px";
     }
 });
+
+// Activer le bouton Valider de la modale 2
+function disabledOrNot() {
+    const file = inputAddImg.files[0];
+    // const file = inputAddImg.files[0];
+    if (!file || imgPreview.src === "" || uploadTitle.value.trim() === "" || menuCategory.value === "" ) {
+        btnValider.disabled = true;
+        btnValider.style.cursor = "not-allowed";
+        btnValider.style.backgroundColor = "#a7a7a7";
+    } else {
+        btnValider.disabled = false;
+        btnValider.style.cursor = "pointer";
+        btnValider.style.backgroundColor = "#1d6154"
+        btnValider.addEventListener("click", addWorks);
+    };
+};
 
 // Fonction affichage modales 1 et 2
 function openModal1() {
@@ -375,7 +388,6 @@ async function addWorks(event) {
             resetForm();
             modal.style.display = "none";
         } else {
-            console.log(response);
             alert("Accès non-autorisé") //code 401
         };
     } catch (error) {

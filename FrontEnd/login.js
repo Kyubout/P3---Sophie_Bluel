@@ -21,7 +21,6 @@ function connectionLogin() {
             email: userMail,
             password: userPass
         };
-        console.log(userData);
 
         //Appel à la fonction fetch
         try {
@@ -34,7 +33,6 @@ function connectionLogin() {
             //Vérification de la réponse
             if (response.ok) {
                 const data = await response.json();
-                console.log("Data de l'utilisateur :", data);
                 //Stockage du token dans le localStorage
                 const token = data.token
                 localStorage.setItem("authToken", token);
