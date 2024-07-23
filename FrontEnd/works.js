@@ -178,6 +178,7 @@ const inputAddImg = document.createElement("input");
 inputAddImg.type = "file";
 inputAddImg.id = "add-img";
 inputAddImg.name = "add-img";
+inputAddImg.accept = "image/jpeg, image/png";
 uploadContainer.appendChild(inputAddImg);
 
 const addLimits = document.createElement("p");
